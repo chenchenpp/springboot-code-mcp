@@ -34,19 +34,16 @@ export function pomDependency(server: McpServer) {
   server.registerTool(
     'injectPomDependencies',
     {
-      description:
-        '向Spring Boot项目的pom.xml文件中注入SSO或Feign依赖，支持自动检测重复依赖',
+      description: '向Spring Boot项目的pom.xml文件中注入SSO或Feign依赖，支持自动检测重复依赖',
       inputSchema: injectDependencySchema,
     },
     async (args): Promise<CallToolResult> => {
-      const { pomFilePath, dependencyTypes } = args as z.infer<
-        typeof injectDependencySchema
-      >;
+      const { pomFilePath, dependencyTypes } = args as z.infer<typeof injectDependencySchema>;
 
       try {
         // 读取pom.xml文件
         const absolutePath = path.resolve(pomFilePath);
-        
+
         if (!fs.existsSync(absolutePath)) {
           return {
             content: [
@@ -63,10 +60,8 @@ export function pomDependency(server: McpServer) {
 
         // 确定要注入的依赖
         const dependencies: MavenDependency[] = [];
-        const includeSSO =
-          dependencyTypes.includes('SSO') || dependencyTypes.includes('BOTH');
-        const includeFeign =
-          dependencyTypes.includes('FEIGN') || dependencyTypes.includes('BOTH');
+        const includeSSO = dependencyTypes.includes('SSO') || dependencyTypes.includes('BOTH');
+        const includeFeign = dependencyTypes.includes('FEIGN') || dependencyTypes.includes('BOTH');
 
         if (includeSSO) {
           dependencies.push(SSO_DEPENDENCY);
@@ -93,7 +88,7 @@ export function pomDependency(server: McpServer) {
         }
 
         let message = `成功处理pom.xml文件：${pomFilePath}\n\n`;
-        
+
         if (result.injected.length > 0) {
           message += `✅ 已注入的依赖 (${result.injected.length}):\n`;
           result.injected.forEach((dep) => {
@@ -130,8 +125,7 @@ export function pomDependency(server: McpServer) {
           },
         };
       } catch (error) {
-        const errorMessage =
-          error instanceof Error ? error.message : String(error);
+        const errorMessage = error instanceof Error ? error.message : String(error);
         return {
           content: [
             {
@@ -159,7 +153,7 @@ export function pomDependency(server: McpServer) {
 
       try {
         const absolutePath = path.resolve(pomFilePath);
-        
+
         if (!fs.existsSync(absolutePath)) {
           return {
             content: [
@@ -210,8 +204,7 @@ export function pomDependency(server: McpServer) {
           },
         };
       } catch (error) {
-        const errorMessage =
-          error instanceof Error ? error.message : String(error);
+        const errorMessage = error instanceof Error ? error.message : String(error);
         return {
           content: [
             {
