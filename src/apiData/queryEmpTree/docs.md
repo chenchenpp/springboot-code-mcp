@@ -1,3 +1,11 @@
+<!--
+ * @Author: peng.chen2 peng.chen2@rt-mart.com
+ * @Date: 2025-12-06 13:50:52
+ * @LastEditors: peng.chen2 peng.chen2@rt-mart.com
+ * @LastEditTime: 2025-12-06 15:18:12
+ * @FilePath: /rt-api-mcp/src/apiData/queryEmpTree/docs.md
+ * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+-->
 # 查询员工树API接口说明
 
 ## 接口列表

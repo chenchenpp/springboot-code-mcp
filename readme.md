@@ -60,6 +60,37 @@
   - `componentType` (组件类型) - 必填，可选值：Controller/Service/Entity/DTO/Repository
 - 返回: 指定组件的Java代码
 
+### 3. POM依赖注入工具
+
+#### `injectPomDependencies`
+向Spring Boot项目的pom.xml文件中注入SSO或Feign依赖
+- 参数:
+  - `pomFilePath` (pom.xml文件路径) - 必填
+  - `dependencyTypes` (依赖类型数组) - 必填，可选值：['SSO']、['FEIGN']、['BOTH']
+- 功能:
+  - 自动检测依赖是否已存在，避免重复注入
+  - 支持同时注入多个依赖
+  - 返回注入成功和跳过的依赖列表
+  - 提供使用示例代码
+- 预定义依赖:
+  - **SSO**: com.feiniu:ssospring:1.0.0-SNAPSHOT
+  - **Feign**: com.feiniu.fnemp:fnemp-apiclient:1.2.4-SNAPSHOT
+
+#### `injectCustomDependency`
+向pom.xml文件中注入自定义的Maven依赖
+- 参数:
+  - `pomFilePath` (pom.xml文件路径) - 必填
+  - `groupId` (Maven groupId) - 必填
+  - `artifactId` (Maven artifactId) - 必填
+  - `version` (版本号) - 必填
+  - `scope` (依赖范围) - 可选，如：test、provided等
+- 返回: 注入结果和操作提示
+
+#### `listPredefinedDependencies`
+查看所有预定义的Maven依赖及其使用示例
+- 参数: 无
+- 返回: SSO和Feign依赖的详细信息和使用示例代码
+
 ## 使用示例
 
 ### 查询员工树数据
@@ -77,6 +108,21 @@
 请为员工树查询接口生成Controller代码，包名为com.company.employee
 ```
 
+### 注入POM依赖
+```
+请向./pom.xml文件中注入SSO和Feign依赖
+```
+
+### 注入自定义依赖
+```
+请向./pom.xml文件中注入依赖：groupId为org.springframework.boot，artifactId为spring-boot-starter-redis，版本为2.7.0
+```
+
+### 查看预定义依赖
+```
+请列出所有预定义的Maven依赖
+```
+
 ## 项目结构
 
 ```
@@ -87,15 +133,22 @@ src/
 │   │   ├── types.ts      # 类型定义
 │   │   ├── examples.ts   # 示例数据
 │   │   └── index.ts      # 导出文件
-│   └── queryEmpTree/     # 员工树查询API
-│       ├── docs.md       # 接口文档
+│   ├── queryEmpTree/     # 员工树查询API
+│   │   ├── docs.md       # 接口文档
+│   │   ├── types.ts      # 类型定义
+│   │   ├── examples.ts   # 示例数据
+│   │   ├── templates.ts  # Spring Boot代码模板
+│   │   └── index.ts      # 导出文件
+│   └── pomDependency/    # POM依赖管理
+│       ├── docs.md       # 使用文档
 │       ├── types.ts      # 类型定义
-│       ├── examples.ts   # 示例数据
-│       ├── templates.ts  # Spring Boot代码模板
+│       ├── predefined.ts # 预定义依赖
+│       ├── pomUtils.ts   # POM操作工具
 │       └── index.ts      # 导出文件
 ├── tools/                # MCP工具实现
 │   ├── clockInActivity.ts
 │   ├── queryEmpTree.ts
+│   ├── pomDependency.ts
 │   └── index.ts
 └── index.ts              # 主入口
 
@@ -107,4 +160,5 @@ src/
 2. **完整的分层架构**: 生成的代码包含Controller、Service、Entity、DTO、Repository完整分层
 3. **符合Spring Boot规范**: 生成的代码符合Spring Boot最佳实践和Java编码规范
 4. **灵活的代码生成**: 支持生成完整代码包或单个组件代码
-5. **类型安全**: 使用TypeScript和Zod进行类型定义和验证
+5. **智能依赖管理**: 自动检测重复依赖，支持批量注入，提供使用示例
+6. **类型安全**: 使用TypeScript和Zod进行类型定义和验证
