@@ -13,16 +13,8 @@ export function help(server: McpServer) {
     },
     async (): Promise<CallToolResult> => {
       const content = await readFile(path.resolve('src/apiData/help.md'), 'utf-8');
-      // await server.sendLoggingMessage({
-      //   level: 'info',
-      //   data: `${JSON.stringify(output)}`,
-      // });
       return {
         content: [{ type: 'text', text: content }],
-        structuredContent: {
-          type: 'markdown',
-          data: content,
-        },
       };
     },
   );

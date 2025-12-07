@@ -2,7 +2,6 @@ import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { CallToolResult } from '@modelcontextprotocol/sdk/types.js';
 import { z } from 'zod';
 import {
-  QueryEmpTreeResponse,
   SpringBootCodeConfig,
   queryEmpTreeResponseExample,
 } from '../apiData/queryEmpTree/index.js';
@@ -26,37 +25,54 @@ const generateCodeInputSchema = z.object({
   generateDto: z.boolean().optional().describe('是否生成DTO，默认true'),
   generateRepository: z.boolean().optional().describe('是否生成Repository，默认true'),
 });
-
+interface EmployeeTreeNode {
+  empId: string;
+  empName: string;
+  empCode: string;
+  deptId: string;
+  deptName: string;
+  position: string;
+  level: number;
+  parentEmpId?: string;
+  children?: EmployeeTreeNode[];
+}
+const EmployeeTreeNodeSchema: z.ZodSchema<EmployeeTreeNode> = z.object({
+  empId: z.string().describe('员工ID'),
+  empName: z.string().describe('员工姓名'),
+  empCode: z.string().describe('员工工号'),
+  deptId: z.string().describe('部门ID'),
+  deptName: z.string().describe('部门名称'),
+  position: z.string().describe('职位'),
+  level: z.number().describe('员工在组织中的层级'),
+  parentEmpId: z.string().optional().describe('上级员工ID'),
+  children: z
+    .array(z.lazy(() => EmployeeTreeNodeSchema))
+    .optional()
+    .describe('员工下属员工列表'),
+});
 export function queryEmpTree(server: McpServer) {
   // 注册查询员工树工具
   server.registerTool(
     'queryEmployeeTree',
     {
-      description: '根据员工ID查询员工组织树结构，返回员工及其下属的树形数据',
+      description: '根据员工ID查询员工组织树结构',
       inputSchema: queryEmpTreeInputSchema,
+      outputSchema: EmployeeTreeNodeSchema.describe('员工组织树'),
     },
     async (args): Promise<CallToolResult> => {
       const { empId, includeSubordinates, maxDepth } = args as z.infer<
         typeof queryEmpTreeInputSchema
       >;
-
       // 模拟API调用
-      const response: QueryEmpTreeResponse = {
-        ...queryEmpTreeResponseExample,
-        data: {
-          ...queryEmpTreeResponseExample.data,
-          empId,
-        },
-      };
-
+      const response = JSON.parse(JSON.stringify(queryEmpTreeResponseExample.data));
       return {
         content: [
           {
             type: 'text',
-            text: `成功查询员工树，员工ID: ${empId}, 包含下属: ${includeSubordinates || false}, 最大层级: ${maxDepth || 3}`,
+            text: `成功查询员工树，员工ID: ${empId}, 包含下属: ${includeSubordinates || false}, 最大层级: ${maxDepth || 3}。员工结构树如下:${JSON.stringify(queryEmpTreeResponseExample.data)}。`,
           },
         ],
-        structuredContent: JSON.parse(JSON.stringify(response)),
+        structuredContent: response,
       };
     },
   );
@@ -70,7 +86,7 @@ export function queryEmpTree(server: McpServer) {
       inputSchema: generateCodeInputSchema,
     },
     async (args): Promise<CallToolResult> => {
-      const config = args as SpringBootCodeConfig;
+      const config = args;
 
       // 生成代码
       const codeMap = generateSpringBootCode(config);
