@@ -1,11 +1,7 @@
 /**
  * 查询员工树API接口示例数据
  */
-import {
-  QueryEmpTreeRequest,
-  QueryEmpTreeResponse,
-  EmployeeTreeNode,
-} from './types.js';
+import { QueryEmpTreeRequest, QueryEmpTreeResponse, EmployeeTreeNode } from './types.js';
 
 // 查询员工树请求示例
 export const queryEmpTreeRequestExample: QueryEmpTreeRequest = {
@@ -17,7 +13,7 @@ export const queryEmpTreeRequestExample: QueryEmpTreeRequest = {
 // 员工树节点示例
 export const employeeTreeNodeExample: EmployeeTreeNode = {
   empId: 'EMP001',
-  empName: '张三',
+  empName: '杨力生',
   empCode: 'E001',
   deptId: 'DEPT001',
   deptName: '技术部',
@@ -26,18 +22,38 @@ export const employeeTreeNodeExample: EmployeeTreeNode = {
   children: [
     {
       empId: 'EMP002',
-      empName: '李四',
+      empName: '叶岭',
       empCode: 'E002',
       deptId: 'DEPT002',
       deptName: '研发一组',
-      position: '组长',
+      position: '高级开发经理',
       level: 2,
       parentEmpId: 'EMP001',
       children: [
         {
           empId: 'EMP003',
-          empName: '王五',
+          empName: '李阳阳',
           empCode: 'E003',
+          deptId: 'DEPT002',
+          deptName: '研发一组',
+          position: '高级工程师',
+          level: 3,
+          parentEmpId: 'EMP002',
+        },
+        {
+          empId: 'EMP004',
+          empName: '周凡皓',
+          empCode: 'E004',
+          deptId: 'DEPT002',
+          deptName: '研发一组',
+          position: '高级工程师',
+          level: 3,
+          parentEmpId: 'EMP002',
+        },
+        {
+          empId: 'EMP005',
+          empName: '陈澎',
+          empCode: 'E005',
           deptId: 'DEPT002',
           deptName: '研发一组',
           position: '高级工程师',

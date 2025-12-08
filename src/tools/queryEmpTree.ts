@@ -4,6 +4,7 @@ import { z } from 'zod';
 import {
   SpringBootCodeConfig,
   queryEmpTreeResponseExample,
+  EmployeeTreeNode,
 } from '../apiData/queryEmpTree/index.js';
 import { generateSpringBootCode } from '../apiData/queryEmpTree/templates.js';
 
@@ -25,17 +26,7 @@ const generateCodeInputSchema = z.object({
   generateDto: z.boolean().optional().describe('是否生成DTO，默认true'),
   generateRepository: z.boolean().optional().describe('是否生成Repository，默认true'),
 });
-interface EmployeeTreeNode {
-  empId: string;
-  empName: string;
-  empCode: string;
-  deptId: string;
-  deptName: string;
-  position: string;
-  level: number;
-  parentEmpId?: string;
-  children?: EmployeeTreeNode[];
-}
+
 const EmployeeTreeNodeSchema: z.ZodSchema<EmployeeTreeNode> = z.object({
   empId: z.string().describe('员工ID'),
   empName: z.string().describe('员工姓名'),
@@ -60,9 +51,7 @@ export function queryEmpTree(server: McpServer) {
       outputSchema: EmployeeTreeNodeSchema.describe('员工组织树'),
     },
     async (args): Promise<CallToolResult> => {
-      const { empId, includeSubordinates, maxDepth } = args as z.infer<
-        typeof queryEmpTreeInputSchema
-      >;
+      const { empId, includeSubordinates, maxDepth } = args;
       // 模拟API调用
       const response = JSON.parse(JSON.stringify(queryEmpTreeResponseExample.data));
       return {
@@ -87,7 +76,16 @@ export function queryEmpTree(server: McpServer) {
     },
     async (args): Promise<CallToolResult> => {
       const config = args;
-
+      if (!config.packageName || !config.moduleName) {
+        return {
+          content: [
+            {
+              type: 'text',
+              text: '缺少包名和模块名，请先说明',
+            },
+          ],
+        };
+      }
       // 生成代码
       const codeMap = generateSpringBootCode(config);
 

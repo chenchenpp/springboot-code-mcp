@@ -116,7 +116,7 @@ const tools = await client.listTools();
 const response = await anthropic.messages.create({
   model: "claude-sonnet-4-20250514",
   max_tokens: 1024,
-  
+
   // ⭐ 这里把 MCP 工具转换为 LLM 能理解的格式
   tools: [
     {
@@ -132,7 +132,7 @@ const response = await anthropic.messages.create({
       }
     }
   ],
-  
+
   messages: [
     { role: "user", content: "北京今天天气怎么样？" }
   ]
@@ -267,7 +267,7 @@ class MCPChatClient {
     await this.mcpClient.connect(transport);
     const { tools } = await this.mcpClient.listTools();
     this.availableTools = tools;
-    
+
     console.log("可用工具:", tools.map(t => t.name));
   }
 
@@ -292,7 +292,7 @@ class MCPChatClient {
       const toolUseBlock = response.content.find(
         block => block.type === "tool_use"
       );
-      
+
       if (toolUseBlock) {
         console.log(`LLM 决定调用: ${toolUseBlock.name}`);
         console.log(`参数:`, toolUseBlock.input);
@@ -388,4 +388,3 @@ server.tool(
   handler
 );
 ```
-
